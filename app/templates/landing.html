@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block styles %}
+<style>
+    /* Landing Page Specific Styles */
+    .landing-page {
+        min-height: 100vh;
+        background: var(--gradient-hero);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Animated Background */
+    .bg-gradient-animated {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background:
+            radial-gradient(circle at 20% 80%, rgba(58, 134, 255, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+        /* Removed breathing animation */
+    }
+
+    /* Navigation */
+    .landing-nav {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: var(--spacing-lg) var(--spacing-2xl);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-sm);
+        font-size: var(--text-xl);
+        font-weight: var(--font-bold);
+        color: var(--text-primary);
+    }
+
+    .logo-icon {
+        font-size: var(--text-2xl);
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: var(--spacing-md);
+    }
+
+    /* Hero Section */
+    .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--spacing-3xl);
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-content {
+        text-align: center;
+        max-width: 800px;
+    }
+
+    .hero-title {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: var(--font-bold);
+        line-height: 1.1;
+        margin-bottom: var(--spacing-lg);
+        background: linear-gradient(135deg, var(--text-primary) 0%, var(--color-accent) 50%, var(--color-highlight) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .hero-subtitle {
+        font-size: var(--text-xl);
+        color: var(--text-secondary);
+        margin-bottom: var(--spacing-2xl);
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    .cta-group {
+        display: flex;
+        gap: var(--spacing-md);
+        justify-content: center;
+        animation: fadeInUp 0.8s ease-out 0.4s both;
+    }
+
+    .cta-group .btn-primary {
+        padding: var(--spacing-lg) var(--spacing-2xl);
+        font-size: var(--text-lg);
+    }
+
+    /* Features Section */
+    .features {
+        padding: var(--spacing-3xl) var(--spacing-2xl);
+        background: linear-gradient(180deg, transparent 0%, rgba(31, 31, 31, 0.5) 100%);
+        position: relative;
+        z-index: 1;
+    }
+
+    .features-title {
+        text-align: center;
+        margin-bottom: var(--spacing-3xl);
+    }
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--spacing-xl);
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .feature-card {
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-xl);
+        padding: var(--spacing-xl);
+        text-align: center;
+        transition: all var(--transition-base);
+        -webkit-backdrop-filter: blur(10px);
+        backdrop-filter: blur(10px);
+    }
+
+    .feature-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-glow);
+        border-color: var(--color-accent);
+    }
+
+    .feature-icon {
+        font-size: 3rem;
+        margin-bottom: var(--spacing-md);
+    }
+
+    .feature-card h3 {
+        font-size: var(--text-xl);
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .feature-card p {
+        color: var(--text-muted);
+        font-size: var(--text-sm);
+        margin: 0;
+    }
+
+    /* Footer */
+    .landing-footer {
+        text-align: center;
+        padding: var(--spacing-xl);
+        color: var(--text-muted);
+        font-size: var(--text-sm);
+        position: relative;
+        z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+        .landing-nav {
+            padding: var(--spacing-md);
+        }
+
+        .hero {
+            padding: var(--spacing-xl);
+            padding-top: 100px;
+        }
+
+        .cta-group {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cta-group .btn {
+            width: 100%;
+            max-width: 300px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="landing-page">
+    <!-- Animated Background -->
+    <div class="bg-gradient-animated"></div>
+
+    <!-- Navigation -->
+    <nav class="landing-nav">
+        <div class="logo">
+            <span class="logo-icon">📈</span>
+            <span>FinFlow</span>
+        </div>
+        <div class="nav-buttons">
+            <a href="{{ url_for('auth.signin') }}" class="btn btn-secondary">Sign In</a>
+            <a href="{{ url_for('auth.signup') }}" class="btn btn-primary glow-on-hover">Get Started</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Smart Investment Recommendations</h1>
+            <p class="hero-subtitle">
+                AI-powered stock and F&O analysis tailored to your risk profile.
+                Make informed investment decisions with personalized recommendations.
+            </p>
+            <div class="cta-group">
+                <a href="{{ url_for('auth.signup') }}" class="btn btn-primary glow-on-hover">
+                    Get Started <span class="btn-arrow">→</span>
+                </a>
+                <a href="#features" class="btn btn-secondary">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="features-title">Why Choose FinFlow?</h2>
+        <div class="feature-grid">
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">📊</div>
+                <h3>Data-Driven Insights</h3>
+                <p>Real-time analysis of market trends and stock performance</p>
+            </div>
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">🎯</div>
+                <h3>Personalized Recommendations</h3>
+                <p>Tailored investment suggestions based on your unique risk profile</p>
+            </div>
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">⚖️</div>
+                <h3>Risk Assessment</h3>
+                <p>Comprehensive questionnaire to understand your investment style</p>
+            </div>
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">📈</div>
+                <h3>F&O Strategies</h3>
+                <p>Options and futures recommendations for advanced investors</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="landing-footer">
+        <p>© 2026 FinFlow. All rights reserved.</p>
+    </footer>
+</div>
+{% endblock %}

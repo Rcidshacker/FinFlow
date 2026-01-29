@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Financial Overview{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="onboarding-container">
+    <!-- Progress Tracker -->
+    <div class="progress-tracker">
+        <div class="progress-step completed">
+            <div class="step-number">✓</div>
+            <span class="step-label">Personal</span>
+        </div>
+        <div class="progress-line active"></div>
+        <div class="progress-step active">
+            <div class="step-number">2</div>
+            <span class="step-label">Financial</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="step-number">3</div>
+            <span class="step-label">Preferences</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="step-number">4</div>
+            <span class="step-label">Risk Profile</span>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="onboarding-form-wrapper">
+        <form method="POST" class="onboarding-form" novalidate>
+            {{ form.hidden_tag() }}
+
+            <h2 class="form-section-title">Financial Overview</h2>
+            <p class="form-subtitle">Help us understand your financial situation</p>
+
+            <div class="form-group has-suffix">
+                <label for="investment_amount">Investment Amount</label>
+                <input type="number" id="investment_amount" name="investment_amount"
+                    class="form-input {% if form.investment_amount.errors %}invalid{% endif %}" placeholder="100000"
+                    min="1000" step="1000" value="{{ form.investment_amount.data or '' }}" required>
+                <span class="input-suffix">₹</span>
+                {% if form.investment_amount.errors %}
+                {% for error in form.investment_amount.errors %}
+                <span class="field-error">{{ error }}</span>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="annual_income">Annual Income</label>
+                <select id="annual_income" name="annual_income"
+                    class="form-select {% if form.annual_income.errors %}invalid{% endif %}" required>
+                    <option value="">Select your income range</option>
+                    <option value="0-5L" {% if form.annual_income.data=='0-5L' %}selected{% endif %}>₹0 - ₹5 Lakhs
+                    </option>
+                    <option value="5-10L" {% if form.annual_income.data=='5-10L' %}selected{% endif %}>₹5L - ₹10 Lakhs
+                    </option>
+                    <option value="10-25L" {% if form.annual_income.data=='10-25L' %}selected{% endif %}>₹10L - ₹25
+                        Lakhs</option>
+                    <option value="25-50L" {% if form.annual_income.data=='25-50L' %}selected{% endif %}>₹25L - ₹50
+                        Lakhs</option>
+                    <option value="50L-1Cr" {% if form.annual_income.data=='50L-1Cr' %}selected{% endif %}>₹50L - ₹1
+                        Crore</option>
+                    <option value="1Cr+" {% if form.annual_income.data=='1Cr+' %}selected{% endif %}>₹1 Crore+</option>
+                </select>
+                {% if form.annual_income.errors %}
+                {% for error in form.annual_income.errors %}
+                <span class="field-error">{{ error }}</span>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group has-suffix">
+                    <label for="expected_return">Expected Return</label>
+                    <input type="number" id="expected_return" name="expected_return"
+                        class="form-input {% if form.expected_return.errors %}invalid{% endif %}" placeholder="15"
+                        min="0" max="100" step="0.5" value="{{ form.expected_return.data or '' }}" required>
+                    <span class="input-suffix">%</span>
+                    {% if form.expected_return.errors %}
+                    {% for error in form.expected_return.errors %}
+                    <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="form-group has-suffix">
+                    <label for="total_debt">Total Debt (Optional)</label>
+                    <input type="number" id="total_debt" name="total_debt" class="form-input" placeholder="0" min="0"
+                        step="1000" value="{{ form.total_debt.data if form.total_debt.data is not none else '0' }}">
+                    <span class="input-suffix">₹</span>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <a href="{{ url_for('main.onboarding_step1') }}" class="btn btn-secondary">
+                    ← Back
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    Continue
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/onboarding.js') }}"></script>
+{% endblock %}

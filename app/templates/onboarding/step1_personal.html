@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Personal Information{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="onboarding-container">
+    <!-- Progress Tracker -->
+    <div class="progress-tracker">
+        <div class="progress-step active">
+            <div class="step-number">1</div>
+            <span class="step-label">Personal</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="step-number">2</div>
+            <span class="step-label">Financial</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="step-number">3</div>
+            <span class="step-label">Preferences</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="step-number">4</div>
+            <span class="step-label">Risk Profile</span>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="onboarding-form-wrapper">
+        <form method="POST" class="onboarding-form" novalidate>
+            {{ form.hidden_tag() }}
+
+            <h2 class="form-section-title">Personal Information</h2>
+            <p class="form-subtitle">Tell us a little about yourself</p>
+
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" class="form-input {% if form.name.errors %}invalid{% endif %}"
+                    placeholder="Your full name" value="{{ form.name.data or '' }}" required>
+                {% if form.name.errors %}
+                {% for error in form.name.errors %}
+                <span class="field-error">{{ error }}</span>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age"
+                        class="form-input {% if form.age.errors %}invalid{% endif %}" placeholder="25" min="18"
+                        max="100" value="{{ form.age.data or '' }}" required>
+                    {% if form.age.errors %}
+                    {% for error in form.age.errors %}
+                    <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="dependents">Number of Dependents</label>
+                    <input type="number" id="dependents" name="dependents" class="form-input" placeholder="0" min="0"
+                        max="20" value="{{ form.dependents.data if form.dependents.data is not none else '0' }}">
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <span></span> <!-- Spacer -->
+                <button type="submit" class="btn btn-primary">
+                    Continue
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/onboarding.js') }}"></script>
+{% endblock %}

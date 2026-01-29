@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Smart Investment Recommendations - AI-powered stock and F&O analysis">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{% block title %}FinFlow{% endblock %} | Smart Investments</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Base CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    <!-- Page-specific CSS -->
+    {% block styles %}{% endblock %}
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    {% block navbar %}
+    {% if current_user.is_authenticated %}
+    <nav class="navbar">
+        <div class="container">
+            <a href="{{ url_for('main.landing') }}" class="navbar-brand">
+                <span>📈</span>
+                <span>FinFlow</span>
+            </a>
+            <div class="navbar-nav">
+                {% if current_user.profile %}
+                <a href="{{ url_for('main.profile') }}"
+                    class="nav-link {% if request.endpoint == 'main.profile' %}active{% endif %}">
+                    Profile
+                </a>
+                <a href="{{ url_for('main.recommendations') }}"
+                    class="nav-link {% if request.endpoint == 'main.recommendations' %}active{% endif %}">
+                    Recommendations
+                </a>
+                {% endif %}
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-sm">
+                    Sign Out
+                </a>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+    {% endblock %}
+
+    <!-- Main Content -->
+    <main class="page-wrapper">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Base JavaScript -->
+    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+
+    <!-- Page-specific JavaScript -->
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

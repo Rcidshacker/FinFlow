@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <!-- Form Section -->
+    <div class="auth-form-section">
+        <div class="auth-card">
+            <h2 class="auth-title">Create Account</h2>
+            <p class="auth-subtitle">Start your investment journey today</p>
+
+            <form method="POST" class="auth-form" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email"
+                        class="form-input {% if form.email.errors %}invalid{% endif %}"
+                        placeholder="your.email@example.com" value="{{ form.email.data or '' }}" required>
+                    {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                    <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password"
+                            class="form-input {% if form.password.errors %}invalid{% endif %}" placeholder="••••••••"
+                            minlength="8" required onkeyup="updatePasswordStrength()">
+                        <span class="input-icon toggle-password" onclick="togglePassword('password')">👁️</span>
+                    </div>
+                    {% if form.password.errors %}
+                    {% for error in form.password.errors %}
+                    <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                    {% endif %}
+                    <div class="password-strength">
+                        <div class="strength-bar" id="str1"></div>
+                        <div class="strength-bar" id="str2"></div>
+                        <div class="strength-bar" id="str3"></div>
+                        <div class="strength-bar" id="str4"></div>
+                    </div>
+                    <span class="strength-text" id="strengthText"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="confirm_password" name="confirm_password"
+                            class="form-input {% if form.confirm_password.errors %}invalid{% endif %}"
+                            placeholder="••••••••" required>
+                        <span class="input-icon toggle-password" onclick="togglePassword('confirm_password')">👁️</span>
+                    </div>
+                    {% if form.confirm_password.errors %}
+                    {% for error in form.confirm_password.errors %}
+                    <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    Create Account
+                    <span class="btn-arrow">→</span>
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                Already have an account?
+                <a href="{{ url_for('auth.signin') }}" class="link-accent">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Visual Section -->
+    <div class="auth-visual-section">
+        <div class="gradient-orb"></div>
+        <div class="auth-visual-content">
+            <h3>Join Thousands of Smart Investors</h3>
+            <ul class="feature-list">
+                <li>Personalized recommendations</li>
+                <li>Real-time market analysis</li>
+                <li>Risk-optimized portfolios</li>
+                <li>Expert F&O strategies</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePassword(fieldId) {
+        const input = document.getElementById(fieldId);
+        const icon = input.nextElementSibling;
+
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = '🙈';
+        } else {
+            input.type = 'password';
+            icon.textContent = '👁️';
+        }
+    }
+
+    function updatePasswordStrength() {
+        const password = document.getElementById('password').value;
+        const bars = [
+            document.getElementById('str1'),
+            document.getElementById('str2'),
+            document.getElementById('str3'),
+            document.getElementById('str4')
+        ];
+        const strengthText = document.getElementById('strengthText');
+
+        // Reset bars
+        bars.forEach(bar => bar.className = 'strength-bar');
+
+        if (password.length === 0) {
+            strengthText.textContent = '';
+            return;
+        }
+
+        let score = 0;
+
+        // Length check
+        if (password.length >= 8) score++;
+        if (password.length >= 12) score++;
+
+        // Character variety
+        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+        if (/\d/.test(password)) score++;
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score++;
+
+        // Normalize to 4 levels
+        const level = Math.min(4, Math.ceil(score / 1.25));
+
+        const levels = ['weak', 'fair', 'good', 'strong'];
+        const texts = ['Weak', 'Fair', 'Good', 'Strong'];
+
+        for (let i = 0; i < level; i++) {
+            bars[i].classList.add(levels[Math.min(level - 1, 3)]);
+        }
+
+        strengthText.textContent = texts[level - 1] || '';
+    }
+</script>
+{% endblock %}

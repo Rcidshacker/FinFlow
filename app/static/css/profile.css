@@ -1,0 +1,316 @@
+/**
+ * Profile Page Styles
+ * User profile with cards and risk score visualization
+ */
+
+/* ============= PROFILE CONTAINER ============= */
+.profile-container {
+    min-height: 100vh;
+    padding: var(--spacing-2xl);
+    padding-top: calc(80px + var(--spacing-2xl));
+    background: var(--gradient-primary);
+}
+
+/* ============= PROFILE HEADER ============= */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-xl);
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-accent), var(--color-highlight));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.avatar-initials {
+    font-size: var(--text-3xl);
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-name {
+    font-size: var(--text-2xl);
+    margin-bottom: var(--spacing-xs);
+}
+
+.profile-meta {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.edit-profile-btn {
+    margin-left: auto;
+}
+
+/* ============= RISK BADGE ============= */
+.risk-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--radius-full);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+}
+
+.risk-badge.risk-high,
+.risk-badge.risk-aggressive {
+    background: rgba(239, 68, 68, 0.2);
+    color: var(--color-danger);
+}
+
+.risk-badge.risk-moderate {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--color-warning);
+}
+
+.risk-badge.risk-low,
+.risk-badge.risk-conservative {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--color-success);
+}
+
+/* ============= PROFILE SECTIONS ============= */
+.profile-sections {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+/* ============= PROFILE CARD ============= */
+.profile-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    transition: all var(--transition-base);
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.profile-card:nth-child(2) {
+    animation-delay: 100ms;
+}
+
+.profile-card:nth-child(3) {
+    animation-delay: 200ms;
+}
+
+.profile-card:nth-child(4) {
+    animation-delay: 300ms;
+}
+
+.profile-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.profile-card.highlight {
+    grid-column: span 2;
+    background: linear-gradient(160deg, rgba(58, 134, 255, 0.1) 0%, var(--card-bg) 50%);
+    border-color: rgba(58, 134, 255, 0.3);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-title {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+    margin: 0;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: var(--text-lg);
+    cursor: pointer;
+    padding: var(--spacing-xs);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.icon-btn:hover {
+    color: var(--color-accent);
+    background: var(--hover-overlay);
+}
+
+.card-body {
+    padding: var(--spacing-lg);
+}
+
+/* ============= INFO GRID ============= */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-lg);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.info-item.full-width {
+    grid-column: span 2;
+}
+
+.info-label {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+}
+
+.info-value {
+    font-size: var(--text-base);
+    font-weight: var(--font-medium);
+    color: var(--text-primary);
+}
+
+.info-value.currency {
+    font-family: var(--font-mono);
+    color: var(--color-success);
+}
+
+/* ============= TAG LIST ============= */
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-xs);
+}
+
+/* ============= RISK SCORE DISPLAY ============= */
+.risk-score-display {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+}
+
+.risk-score-circle {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+}
+
+.risk-score-circle svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.risk-score-bg {
+    fill: none;
+    stroke: var(--border-color);
+    stroke-width: 8;
+}
+
+.risk-score-fill {
+    fill: none;
+    stroke: url(#scoreGradient);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 283;
+    transition: stroke-dashoffset 1s ease-out;
+}
+
+.risk-score-value {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: var(--text-3xl);
+    font-weight: var(--font-bold);
+    color: var(--text-primary);
+}
+
+.risk-score-info h4 {
+    font-size: var(--text-xl);
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-accent);
+}
+
+.risk-score-info p {
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* ============= PROFILE ACTIONS ============= */
+.profile-actions {
+    display: flex;
+    justify-content: center;
+    animation: fadeInUp 0.5s ease-out 400ms both;
+}
+
+/* ============= RESPONSIVE ============= */
+@media (max-width: 1024px) {
+    .profile-sections {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-card.highlight {
+        grid-column: span 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: var(--spacing-lg);
+        padding-top: calc(80px + var(--spacing-lg));
+    }
+
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-meta {
+        justify-content: center;
+    }
+
+    .edit-profile-btn {
+        margin-left: 0;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-item.full-width {
+        grid-column: span 1;
+    }
+
+    .risk-score-display {
+        flex-direction: column;
+        text-align: center;
+    }
+}

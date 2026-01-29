@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Analyzing Your Profile{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="analysis-container">
+    <div class="analysis-content">
+        <!-- Animated Spinner -->
+        <div class="spinner-container">
+            <div class="spinner-outer"></div>
+            <div class="spinner-inner"></div>
+            <div class="spinner-core"></div>
+        </div>
+
+        <h2 class="analysis-title">Analyzing Your Profile</h2>
+
+        <div class="analysis-steps">
+            <div class="analysis-step" id="step1">
+                <span class="step-icon">⏳</span>
+                <span class="step-text">Processing your information...</span>
+            </div>
+            <div class="analysis-step" id="step2">
+                <span class="step-icon">⏳</span>
+                <span class="step-text">Calculating risk profile...</span>
+            </div>
+            <div class="analysis-step" id="step3">
+                <span class="step-icon">⏳</span>
+                <span class="step-text">Generating recommendations...</span>
+            </div>
+            <div class="analysis-step" id="step4">
+                <span class="step-icon">⏳</span>
+                <span class="step-text">Finalizing your dashboard...</span>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const steps = [
+            { id: 'step1', delay: 500, duration: 1500 },
+            { id: 'step2', delay: 2000, duration: 1500 },
+            { id: 'step3', delay: 3500, duration: 2000 },
+            { id: 'step4', delay: 5500, duration: 1500 }
+        ];
+
+        const progressFill = document.getElementById('progressFill');
+        let totalProgress = 0;
+
+        steps.forEach((step, index) => {
+            setTimeout(() => {
+                const stepEl = document.getElementById(step.id);
+                stepEl.classList.add('active');
+                stepEl.querySelector('.step-icon').textContent = '⟳';
+
+                // Update progress
+                totalProgress = ((index + 1) / steps.length) * 100;
+                progressFill.style.width = totalProgress + '%';
+
+                // Mark as completed after duration
+                setTimeout(() => {
+                    stepEl.classList.remove('active');
+                    stepEl.classList.add('completed');
+                    stepEl.querySelector('.step-icon').textContent = '✓';
+                }, step.duration - 200);
+            }, step.delay);
+        });
+
+        // Redirect after all steps complete
+        setTimeout(() => {
+            window.location.href = "{{ url_for('main.recommendations') }}";
+        }, 7500);
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}Investment Preferences{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="onboarding-container">
+    <!-- Progress Tracker -->
+    <div class="progress-tracker">
+        <div class="progress-step completed">
+            <div class="step-number">✓</div>
+            <span class="step-label">Personal</span>
+        </div>
+        <div class="progress-line active"></div>
+        <div class="progress-step completed">
+            <div class="step-number">✓</div>
+            <span class="step-label">Financial</span>
+        </div>
+        <div class="progress-line active"></div>
+        <div class="progress-step active">
+            <div class="step-number">3</div>
+            <span class="step-label">Preferences</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step">
+            <div class="step-number">4</div>
+            <span class="step-label">Risk Profile</span>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="onboarding-form-wrapper">
+        <form method="POST" class="onboarding-form" novalidate>
+            {{ form.hidden_tag() }}
+
+            <h2 class="form-section-title">Investment Preferences</h2>
+            <p class="form-subtitle">Customize your investment approach</p>
+
+            <!-- Risk Preference -->
+            <div class="form-group">
+                <label>Risk Preference</label>
+                <div class="radio-card-group">
+                    <label class="radio-card">
+                        <input type="radio" name="risk_preference" value="high" {% if form.risk_preference.data=='high'
+                            %}checked{% endif %} required>
+                        <div class="radio-card-content">
+                            <span class="radio-icon">🔥</span>
+                            <span class="radio-label">High Risk, High Reward</span>
+                            <span class="radio-desc">Aggressive growth</span>
+                        </div>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="risk_preference" value="moderate" {% if
+                            form.risk_preference.data=='moderate' %}checked{% endif %} required>
+                        <div class="radio-card-content">
+                            <span class="radio-icon">⚖️</span>
+                            <span class="radio-label">Balanced Approach</span>
+                            <span class="radio-desc">Moderate growth</span>
+                        </div>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="risk_preference" value="low" {% if form.risk_preference.data=='low'
+                            %}checked{% endif %} required>
+                        <div class="radio-card-content">
+                            <span class="radio-icon">🛡️</span>
+                            <span class="radio-label">Capital Preservation</span>
+                            <span class="radio-desc">Stable returns</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Investment Goals -->
+            <div class="form-group">
+                <label>Investment Goals</label>
+                <div class="radio-card-group horizontal">
+                    <label class="radio-card">
+                        <input type="radio" name="investment_goals" value="long_term" {% if
+                            form.investment_goals.data=='long_term' %}checked{% endif %} required>
+                        <div class="radio-card-content">
+                            <span class="radio-icon">📈</span>
+                            <span class="radio-label">Long-term Wealth</span>
+                        </div>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" name="investment_goals" value="short_term" {% if
+                            form.investment_goals.data=='short_term' %}checked{% endif %} required>
+                        <div class="radio-card-content">
+                            <span class="radio-icon">⚡</span>
+                            <span class="radio-label">Short-term Gains</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Industry Interest -->
+            <div class="form-group">
+                <label for="industry_interest">Preferred Sectors</label>
+                <select id="industry_interest" name="industry_interest" class="form-select form-select-multi" multiple
+                    required size="6">
+                    <option value="technology" {% if 'technology' in (form.industry_interest.data or []) %}selected{%
+                        endif %}>Technology</option>
+                    <option value="finance" {% if 'finance' in (form.industry_interest.data or []) %}selected{% endif
+                        %}>Finance & Banking</option>
+                    <option value="healthcare" {% if 'healthcare' in (form.industry_interest.data or []) %}selected{%
+                        endif %}>Healthcare & Pharma</option>
+                    <option value="energy" {% if 'energy' in (form.industry_interest.data or []) %}selected{% endif %}>
+                        Energy & Utilities</option>
+                    <option value="fmcg" {% if 'fmcg' in (form.industry_interest.data or []) %}selected{% endif %}>FMCG
+                        & Consumer</option>
+                    <option value="manufacturing" {% if 'manufacturing' in (form.industry_interest.data or [])
+                        %}selected{% endif %}>Manufacturing</option>
+                    <option value="real_estate" {% if 'real_estate' in (form.industry_interest.data or []) %}selected{%
+                        endif %}>Real Estate</option>
+                    <option value="infrastructure" {% if 'infrastructure' in (form.industry_interest.data or [])
+                        %}selected{% endif %}>Infrastructure</option>
+                </select>
+                <span class="multi-select-hint">Hold Ctrl/Cmd to select multiple sectors</span>
+            </div>
+
+            <div class="btn-group">
+                <a href="{{ url_for('main.onboarding_step2') }}" class="btn btn-secondary">
+                    ← Back
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    Continue
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/onboarding.js') }}"></script>
+{% endblock %}

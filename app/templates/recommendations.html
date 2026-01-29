@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}Your Recommendations{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/recommendations.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="recommendations-container container">
+    <!-- Header -->
+    <div class="recommendations-header">
+        <h1 class="page-title">Investment Recommendations</h1>
+        <div class="header-meta">
+            <span class="last-updated">
+                Last updated: {{ stocks[0].created_at.strftime('%d %b %Y, %H:%M') if stocks else 'Just now' }}
+            </span>
+            <button class="btn btn-secondary refresh-btn">
+                <span class="btn-icon">🔄</span>
+                Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-navigation">
+        <button class="tab-btn active" data-tab="stocks">
+            <span class="tab-icon">📈</span>
+            <span class="tab-label">Stocks</span>
+        </button>
+        <button class="tab-btn" data-tab="fno">
+            <span class="tab-icon">📊</span>
+            <span class="tab-label">F&O</span>
+        </button>
+    </div>
+
+    <!-- Stocks Tab -->
+    <div class="tab-content active" id="stocks-tab">
+        <!-- Allocation Summary -->
+        <div class="allocation-summary">
+            <div class="summary-card">
+                <span class="summary-label">Total Invested</span>
+                <span class="summary-value">₹{{ '{:,.0f}'.format(total_stock_investment) }}</span>
+            </div>
+            <div class="summary-card">
+                <span class="summary-label">Number of Stocks</span>
+                <span class="summary-value">{{ stocks | length }}</span>
+            </div>
+            <div class="summary-card">
+                <span class="summary-label">Avg Expected Return</span>
+                <span class="summary-value positive">{{ '%.1f' | format(avg_stock_return) }}%</span>
+            </div>
+        </div>
+
+        <!-- Stocks Table -->
+        <div class="recommendations-table-container">
+            <table class="recommendations-table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Company</th>
+                        <th>Sector</th>
+                        <th>Current Price</th>
+                        <th>Allocation</th>
+                        <th>Target Price</th>
+                        <th>Expected Return</th>
+                        <th>Risk</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in stocks %}
+                    <tr class="table-row">
+                        <td><span class="symbol-badge">{{ stock.symbol }}</span></td>
+                        <td>{{ stock.company_name }}</td>
+                        <td><span class="sector-tag">{{ stock.sector }}</span></td>
+                        <td>₹{{ '%.2f' | format(stock.current_price) }}</td>
+                        <td>
+                            ₹{{ '{:,.0f}'.format(stock.allocation_amount) }}
+                            <span class="allocation-percent">({{ '%.1f' | format(stock.allocation_percent) }}%)</span>
+                        </td>
+                        <td>₹{{ '%.2f' | format(stock.target_price) }}</td>
+                        <td>
+                            <span class="return-badge {{ 'positive' if stock.expected_return > 0 else 'negative' }}">
+                                {% if stock.expected_return > 0 %}+{% endif %}{{ '%.1f' | format(stock.expected_return)
+                                }}%
+                            </span>
+                        </td>
+                        <td>
+                            <span class="risk-indicator risk-{{ stock.risk_level }}">{{ stock.risk_level.title()
+                                }}</span>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted empty-table-cell">
+                            No stock recommendations yet. Click refresh to generate.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Stocks Chart -->
+        {% if stocks %}
+        <div class="chart-section">
+            <h3 class="chart-title">Portfolio Allocation</h3>
+            <div class="chart-container">
+                <canvas id="stocksPieChart"></canvas>
+            </div>
+            <div class="chart-legend"></div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- F&O Tab -->
+    <div class="tab-content" id="fno-tab">
+        <!-- F&O Summary -->
+        <div class="allocation-summary">
+            <div class="summary-card">
+                <span class="summary-label">Total Allocated</span>
+                <span class="summary-value">₹{{ '{:,.0f}'.format(total_fno_investment) }}</span>
+            </div>
+            <div class="summary-card">
+                <span class="summary-label">Active Positions</span>
+                <span class="summary-value">{{ fnos | length }}</span>
+            </div>
+            <div class="summary-card">
+                <span class="summary-label">Avg Max Profit</span>
+                <span class="summary-value positive">₹{{ '{:,.0f}'.format(avg_fno_profit) }}</span>
+            </div>
+        </div>
+
+        <!-- F&O Table -->
+        <div class="recommendations-table-container">
+            <table class="recommendations-table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Type</th>
+                        <th>Position</th>
+                        <th>Strike Price</th>
+                        <th>Expiry</th>
+                        <th>Premium</th>
+                        <th>Quantity</th>
+                        <th>Max Profit</th>
+                        <th>Max Loss</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fno in fnos %}
+                    <tr class="table-row">
+                        <td><span class="symbol-badge">{{ fno.symbol }}</span></td>
+                        <td>
+                            <span class="type-badge type-{{ fno.option_type.lower() }}">{{ fno.option_type }}</span>
+                        </td>
+                        <td>
+                            <span class="position-badge position-{{ fno.position.lower() }}">{{ fno.position }}</span>
+                        </td>
+                        <td>₹{{ '%.2f' | format(fno.strike_price) }}</td>
+                        <td>{{ fno.expiry.strftime('%d %b %Y') }}</td>
+                        <td>₹{{ '%.2f' | format(fno.premium) }}</td>
+                        <td>{{ fno.quantity }}</td>
+                        <td class="positive">₹{{ '{:,.0f}'.format(fno.max_profit) }}</td>
+                        <td class="negative">₹{{ '{:,.0f}'.format(fno.max_loss) }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="9" class="text-center text-muted empty-table-cell">
+                            No F&O recommendations available. Your risk profile may not include F&O trading.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- F&O Chart -->
+        {% if fnos %}
+        <div class="chart-section">
+            <h3 class="chart-title">Options Overview</h3>
+            <div class="chart-container">
+                <canvas id="fnoScatterChart"></canvas>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+<script>
+    // Pass data to JavaScript
+    {% if stocks %}
+    window.stockLabels = [{% for stock in stocks %}"{{ stock.symbol }}"{% if not loop.last %}, {% endif %} {% endfor %}];
+    window.stockData = [{% for stock in stocks %}{ { stock.allocation_amount } } {% if not loop.last %}, {% endif %} {% endfor %}];
+    {% else %}
+    window.stockLabels = [];
+    window.stockData = [];
+    {% endif %}
+
+    {% if fnos %}
+    window.callData = [
+        {% for fno in fnos if fno.option_type == 'CALL' %}
+    { x: { { loop.index } }, y: { { fno.max_profit } } } {% if not loop.last %}, {% endif %}
+    {% endfor %}
+    ];
+    window.putData = [
+        {% for fno in fnos if fno.option_type == 'PUT' %}
+    { x: { { loop.index } }, y: { { fno.max_profit } } } {% if not loop.last %}, {% endif %}
+    {% endfor %}
+    ];
+    {% else %}
+    window.callData = [];
+    window.putData = [];
+    {% endif %}
+</script>
+
+<script src="{{ url_for('static', filename='js/recommendations.js') }}"></script>
+{% endblock %}

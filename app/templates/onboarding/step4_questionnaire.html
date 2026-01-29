@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}Risk Assessment{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/onboarding.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="onboarding-container">
+    <!-- Progress Tracker -->
+    <div class="progress-tracker">
+        <div class="progress-step completed">
+            <div class="step-number">✓</div>
+            <span class="step-label">Personal</span>
+        </div>
+        <div class="progress-line active"></div>
+        <div class="progress-step completed">
+            <div class="step-number">✓</div>
+            <span class="step-label">Financial</span>
+        </div>
+        <div class="progress-line active"></div>
+        <div class="progress-step completed">
+            <div class="step-number">✓</div>
+            <span class="step-label">Preferences</span>
+        </div>
+        <div class="progress-line active"></div>
+        <div class="progress-step active">
+            <div class="step-number">4</div>
+            <span class="step-label">Risk Profile</span>
+        </div>
+    </div>
+
+    <!-- Form -->
+    <div class="onboarding-form-wrapper">
+        <form method="POST" class="onboarding-form questionnaire" novalidate>
+            {{ form.hidden_tag() }}
+
+            <h2 class="form-section-title">Risk Assessment</h2>
+            <p class="form-subtitle">Answer a few questions to determine your risk profile</p>
+
+            <!-- Question 1 -->
+            <div class="question-block">
+                <div class="question-title">
+                    <span class="question-number">Q1</span>
+                    <span>How would you react if your investment lost 20% in a month?</span>
+                </div>
+                <div class="answer-options">
+                    <label class="answer-option">
+                        <input type="radio" name="q1" value="a" {% if form.q1.data=='a' %}checked{% endif %} required>
+                        <div class="option-content">
+                            <span class="option-text">Sell immediately to prevent further losses</span>
+                            <span class="option-badge badge-conservative">Conservative</span>
+                        </div>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="q1" value="b" {% if form.q1.data=='b' %}checked{% endif %}>
+                        <div class="option-content">
+                            <span class="option-text">Wait and watch the market for a while</span>
+                            <span class="option-badge badge-moderate">Moderate</span>
+                        </div>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="q1" value="c" {% if form.q1.data=='c' %}checked{% endif %}>
+                        <div class="option-content">
+                            <span class="option-text">Buy more at lower prices (average down)</span>
+                            <span class="option-badge badge-aggressive">Aggressive</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question-block">
+                <div class="question-title">
+                    <span class="question-number">Q2</span>
+                    <span>What is your primary investment objective?</span>
+                </div>
+                <div class="answer-options">
+                    <label class="answer-option">
+                        <input type="radio" name="q2" value="a" {% if form.q2.data=='a' %}checked{% endif %} required>
+                        <div class="option-content">
+                            <span class="option-text">Preserve capital with minimal risk</span>
+                            <span class="option-badge badge-conservative">Conservative</span>
+                        </div>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="q2" value="b" {% if form.q2.data=='b' %}checked{% endif %}>
+                        <div class="option-content">
+                            <span class="option-text">Generate steady income with moderate growth</span>
+                            <span class="option-badge badge-moderate">Moderate</span>
+                        </div>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="q2" value="c" {% if form.q2.data=='c' %}checked{% endif %}>
+                        <div class="option-content">
+                            <span class="option-text">Maximize long-term growth, accepting volatility</span>
+                            <span class="option-badge badge-aggressive">Aggressive</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question-block">
+                <div class="question-title">
+                    <span class="question-number">Q3</span>
+                    <span>How long can you stay invested without needing the funds?</span>
+                </div>
+                <div class="answer-options">
+                    <label class="answer-option">
+                        <input type="radio" name="q3" value="a" {% if form.q3.data=='a' %}checked{% endif %} required>
+                        <div class="option-content">
+                            <span class="option-text">Less than 1 year</span>
+                            <span class="option-badge badge-safe">Safe</span>
+                        </div>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="q3" value="b" {% if form.q3.data=='b' %}checked{% endif %}>
+                        <div class="option-content">
+                            <span class="option-text">1-5 years</span>
+                            <span class="option-badge badge-moderate">Moderate</span>
+                        </div>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="q3" value="c" {% if form.q3.data=='c' %}checked{% endif %}>
+                        <div class="option-content">
+                            <span class="option-text">More than 5 years</span>
+                            <span class="option-badge badge-aggressive">Aggressive</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question-block">
+                <div class="question-title">
+                    <span class="question-number">Q4</span>
+                    <span>What percentage of your savings are you investing?</span>
+                </div>
+                <div class="answer-options">
+                    <label class="answer-option">
+                        <input type="radio" name="q4" value="a" {% if form.q4.data=='a' %}checked{% endif %} required>
+                        <div class="option-content">
+                            <span class="option-text">Less than 20%</span>
+                            <span class="option-badge badge-conservative">Conservative</span>
+                        </div>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="q4" value="b" {% if form.q4.data=='b' %}checked{% endif %}>
+                        <div class="option-content">
+                            <span class="option-text">20% - 50%</span>
+                            <span class="option-badge badge-moderate">Moderate</span>
+                        </div>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="q4" value="c" {% if form.q4.data=='c' %}checked{% endif %}>
+                        <div class="option-content">
+                            <span class="option-text">More than 50%</span>
+                            <span class="option-badge badge-aggressive">Aggressive</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question-block">
+                <div class="question-title">
+                    <span class="question-number">Q5</span>
+                    <span>What is your experience with stock market investments?</span>
+                </div>
+                <div class="answer-options">
+                    <label class="answer-option">
+                        <input type="radio" name="q5" value="a" {% if form.q5.data=='a' %}checked{% endif %} required>
+                        <div class="option-content">
+                            <span class="option-text">Beginner or no experience</span>
+                            <span class="option-badge badge-conservative">Conservative</span>
+                        </div>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="q5" value="b" {% if form.q5.data=='b' %}checked{% endif %}>
+                        <div class="option-content">
+                            <span class="option-text">Some experience (1-3 years)</span>
+                            <span class="option-badge badge-moderate">Moderate</span>
+                        </div>
+                    </label>
+                    <label class="answer-option">
+                        <input type="radio" name="q5" value="c" {% if form.q5.data=='c' %}checked{% endif %}>
+                        <div class="option-content">
+                            <span class="option-text">Experienced trader (3+ years)</span>
+                            <span class="option-badge badge-aggressive">Aggressive</span>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <a href="{{ url_for('main.onboarding_step3') }}" class="btn btn-secondary">
+                    ← Back
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    Complete Profile
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/onboarding.js') }}"></script>
+{% endblock %}

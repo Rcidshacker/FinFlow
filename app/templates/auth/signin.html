@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In{% endblock %}
+
+{% block navbar %}{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <!-- Form Section -->
+    <div class="auth-form-section">
+        <div class="auth-card">
+            <h2 class="auth-title">Welcome Back</h2>
+            <p class="auth-subtitle">Sign in to access your investment dashboard</p>
+
+            <form method="POST" class="auth-form" novalidate>
+                {{ form.hidden_tag() }}
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email"
+                        class="form-input {% if form.email.errors %}invalid{% endif %}"
+                        placeholder="your.email@example.com" value="{{ form.email.data or '' }}" required>
+                    {% if form.email.errors %}
+                    {% for error in form.email.errors %}
+                    <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password"
+                            class="form-input {% if form.password.errors %}invalid{% endif %}" placeholder="••••••••"
+                            required>
+                        <span class="input-icon toggle-password" onclick="togglePassword()">👁️</span>
+                    </div>
+                    {% if form.password.errors %}
+                    {% for error in form.password.errors %}
+                    <span class="field-error">{{ error }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="remember-forgot">
+                    <div class="checkbox-wrapper">
+                        <input type="checkbox" id="remember_me" name="remember_me" {% if form.remember_me.data
+                            %}checked{% endif %}>
+                        <label for="remember_me">Remember me</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    Sign In
+                    <span class="btn-arrow">→</span>
+                </button>
+            </form>
+
+            <p class="auth-switch">
+                Don't have an account?
+                <a href="{{ url_for('auth.signup') }}" class="link-accent">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Visual Section -->
+    <div class="auth-visual-section">
+        <div class="gradient-orb"></div>
+        <div class="auth-visual-content">
+            <h3>Make Smarter Investments</h3>
+            <ul class="feature-list">
+                <li>Personalized stock recommendations</li>
+                <li>Real-time market analysis</li>
+                <li>Risk-optimized portfolios</li>
+                <li>F&O trading strategies</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const icon = document.querySelector('.toggle-password');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.textContent = '🙈';
+        } else {
+            passwordInput.type = 'password';
+            icon.textContent = '👁️';
+        }
+    }
+</script>
+{% endblock %}

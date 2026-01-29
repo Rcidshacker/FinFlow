@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Your Profile{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-avatar">
+            <span class="avatar-initials">{{ profile.name[0] if profile and profile.name else 'U' }}</span>
+        </div>
+        <div class="profile-info">
+            <h1 class="profile-name">{{ profile.name if profile else 'User' }}</h1>
+            <div class="profile-meta">
+                <span class="risk-badge risk-{{ profile.risk_category.lower() if profile else 'moderate' }}">
+                    {{ profile.risk_category if profile else 'Moderate' }} Investor
+                </span>
+                <span class="text-muted">Member since {{ current_user.created_at.strftime('%B %Y') }}</span>
+            </div>
+        </div>
+        <button class="btn btn-secondary edit-profile-btn edit-section" data-section="personal">
+            ✏️ Edit Profile
+        </button>
+    </div>
+
+    <!-- Profile Sections -->
+    <div class="profile-sections">
+        <!-- Personal Information -->
+        <div class="profile-card">
+            <div class="card-header">
+                <h3 class="card-title">Personal Information</h3>
+                <button class="icon-btn edit-section" data-section="personal" title="Edit">✏️</button>
+            </div>
+            <div class="card-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Name</span>
+                        <span class="info-value">{{ profile.name if profile else 'N/A' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Age</span>
+                        <span class="info-value">{{ profile.age if profile else 'N/A' }} years</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Dependents</span>
+                        <span class="info-value">{{ profile.dependents if profile else '0' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email</span>
+                        <span class="info-value">{{ current_user.email }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Overview -->
+        <div class="profile-card">
+            <div class="card-header">
+                <h3 class="card-title">Financial Overview</h3>
+                <button class="icon-btn edit-section" data-section="financial" title="Edit">✏️</button>
+            </div>
+            <div class="card-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Investment Amount</span>
+                        <span class="info-value currency">₹{{ '{:,.0f}'.format(profile.investment_amount) if profile
+                            else '0' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Annual Income</span>
+                        <span class="info-value">{{ profile.annual_income if profile else 'N/A' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Expected Return</span>
+                        <span class="info-value">{{ profile.expected_return if profile else '0' }}%</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Total Debt</span>
+                        <span class="info-value">₹{{ '{:,.0f}'.format(profile.total_debt) if profile and
+                            profile.total_debt else '0' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investment Preferences -->
+        <div class="profile-card">
+            <div class="card-header">
+                <h3 class="card-title">Investment Preferences</h3>
+                <button class="icon-btn edit-section" data-section="preferences" title="Edit">✏️</button>
+            </div>
+            <div class="card-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Risk Preference</span>
+                        <span class="info-value">
+                            <span class="risk-badge risk-{{ profile.risk_preference if profile else 'moderate' }}">
+                                {{ profile.risk_preference.title() if profile else 'Moderate' }}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Investment Goals</span>
+                        <span class="info-value">{{ 'Long-term Wealth' if profile and profile.investment_goals ==
+                            'long_term' else 'Short-term Gains' }}</span>
+                    </div>
+                    <div class="info-item full-width">
+                        <span class="info-label">Preferred Sectors</span>
+                        <div class="tag-list">
+                            {% if profile and profile.industry_interest %}
+                            {% for industry in profile.industry_interest %}
+                            <span class="tag">{{ industry.replace('_', ' ').title() }}</span>
+                            {% endfor %}
+                            {% else %}
+                            <span class="text-muted">No preferences set</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Score Card (Highlighted) -->
+        <div class="profile-card highlight">
+            <div class="card-header">
+                <h3 class="card-title">Risk Score Analysis</h3>
+            </div>
+            <div class="card-body">
+                <div class="risk-score-display">
+                    <div class="risk-score-circle">
+                        <svg viewBox="0 0 100 100">
+                            <defs>
+                                <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#3A86FF" />
+                                    <stop offset="100%" stop-color="#8B5CF6" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="risk-score-bg" cx="50" cy="50" r="45"></circle>
+                            <circle class="risk-score-fill" cx="50" cy="50" r="45"
+                                stroke-dashoffset="{{ 283 - (283 * (profile.risk_score if profile else 50) / 100) }}">
+                            </circle>
+                        </svg>
+                        <div class="risk-score-value">{{ profile.risk_score if profile else '50' }}</div>
+                    </div>
+                    <div class="risk-score-info">
+                        <h4>{{ profile.risk_category if profile else 'Moderate' }} Investor</h4>
+                        <p>{{ profile.risk_description if profile else 'Your risk profile indicates a balanced approach
+                            to investing, seeking moderate growth while managing potential losses.' }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="profile-actions">
+        <a href="{{ url_for('main.recommendations') }}" class="btn btn-primary">
+            View Recommendations
+            <span class="btn-arrow">→</span>
+        </a>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal" id="editModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Edit Profile</h3>
+            <button class="modal-close">×</button>
+        </div>
+        <div class="modal-body">
+            <!-- Form will be inserted here via JavaScript -->
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary cancel-edit">Cancel</button>
+            <button class="btn btn-primary save-edit">Save Changes</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+{% endblock %}
