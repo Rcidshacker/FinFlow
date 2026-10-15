@@ -64,3 +64,12 @@ htmlcov/
 # Misc
 *.bak
 *.tmp
+
+# Credentials, dumps and generated files (never commit)
+data/db/
+*.pem
+*.key
+token.json
+demo_token.json
+.env.*
+!.env.example
